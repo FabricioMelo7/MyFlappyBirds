@@ -1,1 +1,70 @@
-Hello world
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using System.Linq;
+using Unity.VisualScripting;
+
+public class GameManager : MonoBehaviour
+{
+    public GameObject player;
+    public Text scoreText;
+    public GameObject playButton;
+    public GameObject gameOver;
+
+    private int score;
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;        
+
+        Pause();
+    }
+
+    public void Play()
+    {        
+        score = 0;
+        scoreText.text = score.ToString();
+
+        playButton.SetActive(false);
+        gameOver.SetActive(false);
+        
+
+        Time.timeScale = 1f;
+        player.SetActive(true);
+        ResetPosition(player);
+
+        Pipes[] pipes = FindObjectsOfType<Pipes>();
+
+        foreach (Pipes pipe in pipes)
+        {
+            Destroy(pipe.gameObject);
+        }
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0f; // This is stoping the game time/ Freezing time
+        player.SetActive(false);
+    }
+
+    public void GameOver()
+    {
+        gameOver.SetActive(true);
+        playButton.SetActive(true);
+
+        Pause();
+    }
+
+    public void IncreaseScore()
+    {
+        score++;
+        scoreText.text = score.ToString();
+    }
+
+    public void ResetPosition(GameObject thing)
+    {
+        FindObjectOfType<Player>().Direction = Vector3.zero;
+        thing.gameObject.transform.position = Vector3.zero;
+    }
+}
